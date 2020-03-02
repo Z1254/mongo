@@ -11,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Entity_DataCount {
     @Id
     private int key;
+
     private int FollowersCount;
     private int FollowingCount;
 
