@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.*;
 
 /**
@@ -97,8 +98,8 @@ public class FileReader {
             writeThreadPool.execute(new MultiThreadWriter());
         }
         writeThreadPool.shutdown();
-        while (true){
-            if (writeThreadPool.isTerminated()){
+        while (true) {
+            if (writeThreadPool.isTerminated()) {
                 stopWatch.stop();
                 break;
             }
@@ -127,7 +128,7 @@ public class FileReader {
                         try {
                             SmsBill smsBill = new SmsBill();
                             String[] split = poll.split("\\t");
-                            smsBill.setMsgId(split[1].trim());
+                            smsBill.setMsgId(UUID.randomUUID().toString().replace("-",""));
                             smsBill.setAccountId(split[2].trim());
                             smsBill.setAppendId(split[3].trim());
                             smsBill.setMobile(split[4].trim());
@@ -142,10 +143,13 @@ public class FileReader {
                     } else {
                         isRunning = false;
                     }
-                    if (list.size() > 2000 || (list.size() > 0 && isRunning == false)) {
+                    if (list.size() > 200 || (list.size() > 0 && isRunning == false)) {
                         //TODO: 写数据库
                         this.smsBillMapper = BeanContext.getApplicationContext().getBean(SmsBillMapper.class);
+                        long l = System.currentTimeMillis();
                         this.smsBillMapper.insert(list);
+                        long l1 = System.currentTimeMillis();
+                        System.out.println("insert 所用时长： " + (l1 - l));
                         list.clear();
                     }
                 }

@@ -26,7 +26,7 @@ public class DemoController {
 
     @GetMapping("/api/file/test")
     public void test() {
-        FileReader fileReader = new FileReader("E:\\c.txt", 1024, 100, 50);
+        FileReader fileReader = new FileReader("E:\\c.txt", 1024, 10, 100);
         fileReader.registerHandler(new FileLineDataHandler());
         fileReader.startRead();
         fileReader.startWriter();
